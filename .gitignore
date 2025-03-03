@@ -1,0 +1,9 @@
+# ignore .vscode folder
+.vscode/
+
+# if you want to ignore a specific file or directory 
+# but keep certain contents within it
+# you can do this
+# logs/   # ignore whole dir
+# logs/*.log # ignore all files with .log extension
+# !logs/keep.log # but keep this file
