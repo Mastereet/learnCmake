@@ -14,6 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 option(TESTS_ENABLED "Whether to enable tests" ON)
 
 if(TESTS_ENABLED)
+    include(GoogleTest)
     enable_testing()
 endif()
 

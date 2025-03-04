@@ -96,9 +96,8 @@ macro(JOT_ADD_INTERFACE_LIBRARY)
     add_library(${JOT_ADD_INTERFACE_LIBRARY_NAME} INTERFACE ${JOT_ADD_INTERFACE_LIBRARY_HEADERS})
     # Link the library against the specified libraries
     target_link_libraries(${JOT_ADD_INTERFACE_LIBRARY_NAME}
-        PRIVATE
+        INTERFACE
         ${JOT_ADD_INTERFACE_LIBRARY_PRIVATE_LINK_LIBRARIES}
-        PUBLIC
         ${JOT_ADD_INTERFACE_LIBRARY_PUBLIC_LINK_LIBRARIES})
 endmacro(JOT_ADD_INTERFACE_LIBRARY)
 
@@ -124,20 +123,26 @@ macro(JOT_ADD_LIBRARY)
     set(multi_value_args "NAME" "SOURCES" "HEADERS" "PUBLIC_LINK_LIBRARIES" "PRIVATE_LINK_LIBRARIES")
     # Parse the arguments
     cmake_parse_arguments(JOT_ADD_LIBRARY "${options}" "${single_value_args}" "${multi_value_args}" ${ARGN})
-    
-    if(JOT_ADD_LIBRARY_SOURCES)
-      # if there are source files, create a static library
-      add_library(${JOT_ADD_LIBRARY_NAME} STATIC ${JOT_ADD_LIBRARY_SOURCES} ${JOT_ADD_LIBRARY_HEADERS})
-    else()
-      # if there are no source files, create an interface library (for pure header library)
-      add_library(${JOT_ADD_LIBRARY_NAME} INTERFACE ${JOT_ADD_LIBRARY_HEADERS})
-      # target_include_directories(${JOT_ADD_LIBRARY_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-    endif()
 
-    # link the library
-    target_link_libraries(${JOT_ADD_LIBRARY_NAME}
-        PRIVATE ${JOT_ADD_LIBRARY_PRIVATE_LINK_LIBRARIES}
-        PUBLIC ${JOT_ADD_LIBRARY_PUBLIC_LINK_LIBRARIES})
+    if(JOT_ADD_LIBRARY_SOURCES)
+        # if there are source files, create a static library
+        add_library(${JOT_ADD_LIBRARY_NAME} STATIC ${JOT_ADD_LIBRARY_SOURCES} ${JOT_ADD_LIBRARY_HEADERS})
+        # link the library
+        target_link_libraries(${JOT_ADD_LIBRARY_NAME}
+            PRIVATE
+                ${JOT_ADD_LIBRARY_PRIVATE_LINK_LIBRARIES}
+            PUBLIC
+                ${JOT_ADD_LIBRARY_PUBLIC_LINK_LIBRARIES})
+    else()
+        # if there are no source files, create an interface library (for pure header library)
+        add_library(${JOT_ADD_LIBRARY_NAME} INTERFACE ${JOT_ADD_LIBRARY_HEADERS})
+        # target_include_directories(${JOT_ADD_LIBRARY_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+        # For an interface library, linking must be done with INTERFACE keyword only
+        target_link_libraries(${JOT_ADD_LIBRARY_NAME}
+            INTERFACE
+                ${JOT_ADD_LIBRARY_PRIVATE_LINK_LIBRARIES}
+                ${JOT_ADD_LIBRARY_PUBLIC_LINK_LIBRARIES})
+    endif()
 endmacro(JOT_ADD_LIBRARY)
 
 
@@ -200,7 +205,8 @@ macro(JOT_ADD_TEST)
             PUBLIC
             ${JOT_ADD_TEST_PUBLIC_LINK_LIBRARIES})
         # Add the test
-        add_test("${FOLDER_NAME}/${JOT_ADD_TEST_NAME}" ${JOT_ADD_TEST_NAME})
+        # add_test("${FOLDER_NAME}/${JOT_ADD_TEST_NAME}" ${JOT_ADD_TEST_NAME})
+        gtest_discover_tests(${JOT_ADD_TEST_NAME})
     endif()
 endmacro(JOT_ADD_TEST)
 
