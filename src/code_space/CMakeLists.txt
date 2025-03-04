@@ -10,6 +10,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 
+# enable test
+option(TESTS_ENABLED "Whether to enable tests" ON)
+
+if(TESTS_ENABLED)
+    enable_testing()
+endif()
+
 
 ################################################################################
 # Include CMake Modules
@@ -21,7 +28,15 @@ include(CheckCXXCompilerFlag)
 
 # Include helper macros and commands, and allow the included file to override
 # the CMake policies in this file
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeHelper.cmake NO_POLICY_SCOPE)
+include(cmake/CMakeHelper.cmake NO_POLICY_SCOPE)
+
+################################################################################
+# Dependency configuration
+################################################################################
+# Find the required libraries
+set(JOT_FIND_QUIETLY FALSE)
+include(cmake/FindDependencies.cmake)
+
 
 # Build type
 # if not specified, use Release
@@ -32,4 +47,6 @@ else()
     set(CMAKE_BUILD_TYPE Release)
     set(IS_DEBUG OFF)
 endif()
+
+add_subdirectory(jot)
 

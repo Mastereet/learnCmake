@@ -1,0 +1,6 @@
+Terminal:
+in code_sapce/
+1. cmake -B build
+2. cmake --build build
+3. cd build
+4. ctest

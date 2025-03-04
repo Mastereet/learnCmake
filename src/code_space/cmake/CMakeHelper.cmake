@@ -49,14 +49,14 @@ endmacro(JOT_ADD_SOURCE_DIR)
 
 # This macro will add a library to the project.
 # The usage of the macro is as follows:
-# JOT_ADD_LIBRARY(
+# JOT_ADD_STATIC_LIBRARY(
 #     NAME <library name>
 #     SOURCES <source files>
 #     HEADERS <header files>
 #     PUBLIC_LINK_LIBRARIES <libraries to link against>
 #     PRIVATE_LINK_LIBRARIES <libraries to link against>
 # )
-macro(JOT_ADD_LIBRARY)
+macro(JOT_ADD_STATIC_LIBRARY)
     # Set the options
     set(options)
     # Set the single-value arguments
@@ -73,7 +73,75 @@ macro(JOT_ADD_LIBRARY)
         ${JOT_ADD_LIBRARY_PRIVATE_LINK_LIBRARIES}
         PUBLIC
         ${JOT_ADD_LIBRARY_PUBLIC_LINK_LIBRARIES})
+endmacro(JOT_ADD_STATIC_LIBRARY)
+
+# This macro will add an interface library to the project, pure header library.
+# The usage of the macro is as follows:
+# JOT_ADD_INTERFACE_LIBRARY(
+#     NAME <library name>
+#     HEADERS <header files>
+#     PUBLIC_LINK_LIBRARIES <libraries to link against>
+#     PRIVATE_LINK_LIBRARIES <libraries to link against>
+# )
+macro(JOT_ADD_INTERFACE_LIBRARY)
+    # Set the options
+    set(options)
+    # Set the single-value arguments
+    set(single_value_args)
+    # Set the multi-value arguments
+    set(multi_value_args "NAME" "HEADERS" "PUBLIC_LINK_LIBRARIES" "PRIVATE_LINK_LIBRARIES")
+    # Parse the arguments
+    cmake_parse_arguments(JOT_ADD_INTERFACE_LIBRARY "${options}" "${single_value_args}" "${multi_value_args}" ${ARGN})
+    # Add the library
+    add_library(${JOT_ADD_INTERFACE_LIBRARY_NAME} INTERFACE ${JOT_ADD_INTERFACE_LIBRARY_HEADERS})
+    # Link the library against the specified libraries
+    target_link_libraries(${JOT_ADD_INTERFACE_LIBRARY_NAME}
+        PRIVATE
+        ${JOT_ADD_INTERFACE_LIBRARY_PRIVATE_LINK_LIBRARIES}
+        PUBLIC
+        ${JOT_ADD_INTERFACE_LIBRARY_PUBLIC_LINK_LIBRARIES})
+endmacro(JOT_ADD_INTERFACE_LIBRARY)
+
+
+# This macro will add a library to the project.
+# If there are source files, it will create a static library.
+# If there are no source files, it will create an interface library (for pure header library).
+# The usage of the macro is as follows:
+# JOT_ADD_LIBRARY(
+#     NAME <library name>
+#     SOURCES <source files>
+#     HEADERS <header files>
+#     PUBLIC_LINK_LIBRARIES <libraries to link against>
+#     PRIVATE_LINK_LIBRARIES <libraries to link against>
+# )
+
+macro(JOT_ADD_LIBRARY)
+    # Set the options
+    set(options)
+    # Set the single-value arguments
+    set(single_value_args)
+    # Set the multi-value arguments
+    set(multi_value_args "NAME" "SOURCES" "HEADERS" "PUBLIC_LINK_LIBRARIES" "PRIVATE_LINK_LIBRARIES")
+    # Parse the arguments
+    cmake_parse_arguments(JOT_ADD_LIBRARY "${options}" "${single_value_args}" "${multi_value_args}" ${ARGN})
+    
+    if(JOT_ADD_LIBRARY_SOURCES)
+      # if there are source files, create a static library
+      add_library(${JOT_ADD_LIBRARY_NAME} STATIC ${JOT_ADD_LIBRARY_SOURCES} ${JOT_ADD_LIBRARY_HEADERS})
+    else()
+      # if there are no source files, create an interface library (for pure header library)
+      add_library(${JOT_ADD_LIBRARY_NAME} INTERFACE ${JOT_ADD_LIBRARY_HEADERS})
+      # target_include_directories(${JOT_ADD_LIBRARY_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+    endif()
+
+    # link the library
+    target_link_libraries(${JOT_ADD_LIBRARY_NAME}
+        PRIVATE ${JOT_ADD_LIBRARY_PRIVATE_LINK_LIBRARIES}
+        PUBLIC ${JOT_ADD_LIBRARY_PUBLIC_LINK_LIBRARIES})
 endmacro(JOT_ADD_LIBRARY)
+
+
+
 
 # This macro will add an executable to the project.
 # The usage of the macro is as follows:
