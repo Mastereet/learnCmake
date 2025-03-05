@@ -1,4 +1,4 @@
-#include "know_enum.hpp"
+#include "jot/know_enum.hpp"
 #include <gtest/gtest.h>
 
 enum class TestEnum {

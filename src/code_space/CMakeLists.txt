@@ -13,6 +13,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 # enable test
 option(TESTS_ENABLED "Whether to enable tests" ON)
 
+set(CODE_SPACE_INCLUDR_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+
 if(TESTS_ENABLED)
     include(GoogleTest)
     enable_testing()
@@ -48,6 +50,7 @@ else()
     set(CMAKE_BUILD_TYPE Release)
     set(IS_DEBUG OFF)
 endif()
+include_directories(${CODE_SPACE_INCLUDR_DIRS})
 
 add_subdirectory(jot)
 
