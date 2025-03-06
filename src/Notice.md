@@ -16,3 +16,8 @@ If you want to test your code, recommend using googletest.
 Git 教程
 [1](https://liaoxuefeng.com/books/git/introduction/index.html)
 [2](https://www.runoob.com/git/git-tutorial.html)
+
+ZSH Terminal config:
+[zsh](https://www.haoyep.com/posts/zsh-config-oh-my-zsh/)
+[svn problem](https://askubuntu.com/questions/385243/zsh-command-not-found-svn-prompt-info)
+`my zsh theme: funkyberlin`
