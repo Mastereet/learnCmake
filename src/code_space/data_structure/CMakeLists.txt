@@ -19,8 +19,7 @@ JOT_ADD_TEST(
     HEADERS
         milk_vector.hpp
     PUBLIC_LINK_LIBRARIES
-        milk_vector
+
     PRIVATE_LINK_LIBRARIES
-        GTest::gtest
-        GTest::gtest_main
+        
 )
