@@ -53,4 +53,6 @@ endif()
 include_directories(${CODE_SPACE_INCLUDR_DIRS})
 
 add_subdirectory(jot)
+add_subdirectory(data_structure)
+add_subdirectory(design_pattern)
 
